@@ -1,0 +1,23 @@
+/*
+    module  : cosh.c
+    version : 1.1
+    date    : 03/21/24
+*/
+#ifndef COSH_C
+#define COSH_C
+
+/**
+Q0  OK  1550  cosh  :  DA  F  ->  G
+G is the hyperbolic cosine of F.
+*/
+void cosh_(pEnv env)
+{
+    Node node;
+
+    PARM(1, UFLOAT);
+    node = vec_pop(env->stack);
+    node.u.dbl = cosh(node.op == FLOAT_ ? node.u.dbl : (double)node.u.num);
+    node.op = FLOAT_;
+    vec_push(env->stack, node);
+}
+#endif

@@ -1,0 +1,17 @@
+(*
+    module  : name.joy
+    version : 1.4
+    date    : 03/21/24
+*)
+DEFINE	last == dup rest null [first] [rest last] branch.
+
+[pop] first name "pop" =.
+[last] first name "last" =.
+true name " truth value type" =.
+'A name " character type" =.
+10 name " integer type" =.
+{} name " set type" =.
+"" name " string type" =.
+[] name " list type" =.
+1.1 name " float type" =.
+stdin name " file type" =.

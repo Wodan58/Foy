@@ -1,0 +1,26 @@
+(*
+    module  : null.joy
+    version : 1.4
+    date    : 03/21/24
+*)
+DEFINE	last == dup rest null [first] [rest last] branch.
+
+[pop] first null false =.
+[last] first null false =.
+false null.
+true null false =.
+'\000 null.
+'A null false =.
+0 null.
+10 null false =.
+{} null.
+{1 2 3} null false =.
+"" null.
+"test" null false =.
+[] null.
+[1 2 3] null false =.
+-0.0 null.
+0.0 null.
+1.0 null false =.
+"exist" "r" fopen null.
+stdin null false =.

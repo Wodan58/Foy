@@ -1,0 +1,6 @@
+(*
+    module  : formatf.joy
+    version : 1.4
+    date    : 03/21/24
+*)
+1.0 'e 10 10 formatf "1.0000000000e+00" =.
