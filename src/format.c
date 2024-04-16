@@ -1,7 +1,7 @@
 /*
     module  : format.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 04/11/24
 */
 #ifndef FORMAT_C
 #define FORMAT_C
@@ -16,7 +16,7 @@ with maximum width I and minimum width J.
 void format_(pEnv env)
 {
     int leng;
-    char format[7], *result;
+    char format[MAXNUM], *result;
     Node first, second, third, fourth;
 
     PARM(4, FORMAT);
@@ -24,8 +24,8 @@ void format_(pEnv env)
     third = vec_pop(env->stack);	/* max width */
     second = vec_pop(env->stack);	/* mode */
     first = vec_pop(env->stack);	/* number */
-    strcpy(format, "%*.*ld");
-    format[5] = second.u.num;
+    strcpy(format, "%*.*lld");
+    format[6] = second.u.num;
     leng = snprintf(0, 0, format, third.u.num, fourth.u.num, first.u.num) + 1;
     result = GC_malloc_atomic(leng + 1);
     snprintf(result, leng, format, third.u.num, fourth.u.num, first.u.num);

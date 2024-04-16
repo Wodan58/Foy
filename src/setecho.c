@@ -1,7 +1,7 @@
 /*
     module  : setecho.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 04/11/24
 */
 #ifndef SETECHO_C
 #define SETECHO_C
@@ -17,7 +17,6 @@ void setecho_(pEnv env)
 
     PARM(1, PREDSUCC);
     node = vec_pop(env->stack);
-    if (!env->echoflag_set)
-	env->echoflag = node.u.num;
+    env->echoflag = node.u.num;
 }
 #endif

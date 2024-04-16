@@ -1,7 +1,7 @@
 /*
     module  : null.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 04/11/24
 */
 #ifndef NULL_C
 #define NULL_C
@@ -17,6 +17,7 @@ void null_(pEnv env)
     PARM(1, ANYTYPE);
     node = vec_pop(env->stack);
     switch (node.op) {
+#if 0
     case USR_:
     case USR_PRIME_:
 	node.u.num = !node.u.ent;
@@ -25,6 +26,7 @@ void null_(pEnv env)
     case ANON_PRIME_:
 	node.u.num = !node.u.proc;
 	break;
+#endif
     case BOOLEAN_:
     case CHAR_:
     case INTEGER_:
@@ -46,6 +48,9 @@ void null_(pEnv env)
 	break;
     case FILE_:
 	node.u.num = !node.u.fil;
+	break;
+    default:
+	node.u.num = 0;		/* false */
 	break;
     }
     node.op = BOOLEAN_;

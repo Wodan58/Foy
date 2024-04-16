@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.4
-    date    : 03/23/24
+    version : 1.5
+    date    : 04/11/24
 */
 #include "globals.h"
 
@@ -50,8 +50,8 @@ static void options()
     printf("  -s : dump symbol table after execution\n");
     printf("  -t : print a trace of program execution\n");
     printf("  -u : set the undeferror flag (0,1)\n");
-    printf("  -w : suppress warnings overwrite, arity\n");
-    printf("  -x : print statistics after program end\n");
+    printf("  -w : no warnings: overwriting, arities\n");
+    printf("  -x : print statistics at end of program\n");
 }
 
 /*
@@ -68,8 +68,8 @@ static int my_main(int argc, char **argv)
     static unsigned char psdump = 0, pstats = 0;
     Env env;
     Node node;
-    char *ptr, *exe;
     int i, j, ch, flag;
+    char *ptr, *tmp, *exe;
     /*
      * determine srcfile and filenam; they are stored in inilinebuffer.
      */
@@ -111,34 +111,18 @@ static int my_main(int argc, char **argv)
 	    for (j = 1; argv[i][j]; j++) {
 		switch (argv[i][j]) {
 		case 'a' : ptr = &argv[i][j + 1];
-			   env.autoput = atoi(ptr);	/* numeric payload */
-			   env.autoput_set = 1;
-			   ch = *ptr;			/* first digit */
-			   while (isdigit(ch)) {
-			       j++;			/* point last digit */
-			       ptr++;
-			       ch = *ptr;
-			   }
+			   env.autoput = strtoll(ptr, &tmp, 0);
+			   j += tmp - ptr;
+			   env.autoput_set = 1;		/* disable usrlib.joy */
 			   break;
 		case 'd' : env.debugging = 1; break;
 		case 'e' : ptr = &argv[i][j + 1];
-			   env.echoflag = atoi(ptr);	/* numeric payload */
-			   env.echoflag_set = 1;
-			   ch = *ptr;			/* first digit */
-			   while (isdigit(ch)) {
-			       j++;			/* point last digit */
-			       ptr++;
-			       ch = *ptr;
-			   }
+			   env.echoflag = strtoll(ptr, &tmp, 0);
+			   j += tmp - ptr;
 			   break;
 		case 'g' : ptr = &argv[i][j + 1];
-			   env.tracegc = atoi(ptr);	/* numeric payload */
-			   ch = *ptr;			/* first digit */
-			   while (isdigit(ch)) {
-			       j++;			/* point last digit */
-			       ptr++;
-			       ch = *ptr;
-			   }
+			   env.tracegc = strtoll(ptr, &tmp, 0);
+			   j += tmp - ptr;
 			   break;
 		case 'h' : helping = 1; break;
 		case 'i' : env.ignore = 1; break;
@@ -147,14 +131,9 @@ static int my_main(int argc, char **argv)
 		case 's' : psdump = 1; break;
 		case 't' : env.debugging = 2; break;
 		case 'u' : ptr = &argv[i][j + 1];
-			   env.undeferror = atoi(ptr);	/* numeric payload */
-			   env.undeferror_set = 1;
-			   ch = *ptr;			/* first digit */
-			   while (isdigit(ch)) {
-			       j++;			/* point last digit */
-			       ptr++;
-			       ch = *ptr;
-			   }
+			   env.undeferror = strtoll(ptr, &tmp, 0);
+			   j += tmp - ptr;
+			   env.undeferror_set = 1;	/* disable usrlib.joy */
 			   break;
 		case 'w' : env.overwrite = 0; break;
 		case 'x' : pstats = 1; break;
@@ -187,11 +166,11 @@ static int my_main(int argc, char **argv)
 	     */
 	    if ((ptr = strrchr(argv[0] = filenam, '/')) != 0) {
 		*ptr++ = 0;
-		argv[0] = filenam = ptr; /* basename */
+		argv[0] = filenam = ptr;	/* basename */
 	    }
 	    for (--argc; i < argc; i++)
 		argv[i] = argv[i + 1];
-	    break;
+	    break;				/* only one filename */
 	} /* end if */
     } /* end for */
     inilinebuffer(srcfile, filenam);

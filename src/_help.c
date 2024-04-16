@@ -1,7 +1,7 @@
 /*
     module  : _help.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 04/11/24
 */
 #ifndef _HELP_C
 #define _HELP_C
@@ -18,7 +18,7 @@ void _help_(pEnv env)
 
     while (i) {
 	ent = vec_at(env->symtab, --i);
-	if (strchr("#_", ent.name[0])) {
+	if (strchr("#0123456789_", ent.name[0])) {
 	    name_length = strlen(ent.name) + 1;
 	    if (column + name_length > HELPLINEMAX) {
 		putchar('\n');

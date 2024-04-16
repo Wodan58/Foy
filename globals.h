@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.5
-    date    : 03/24/24
+    version : 1.7
+    date    : 04/12/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -169,7 +169,7 @@ typedef struct Node {
 } Node;
 
 typedef struct Entry {
-    char *name, is_user, flags;
+    char *name, is_user, flags, is_ok;
     union {
 	NodeList *body;
 	proc_t proc;
@@ -209,7 +209,6 @@ typedef struct Env {
     unsigned char autoput;
     unsigned char autoput_set;
     unsigned char echoflag;
-    unsigned char echoflag_set;
     unsigned char tracegc;
     unsigned char undeferror;
     unsigned char undeferror_set;
