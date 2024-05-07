@@ -1,7 +1,7 @@
 /*
  *  module  : writ.c
- *  version : 1.1
- *  date    : 03/21/24
+ *  version : 1.2
+ *  date    : 04/19/24
  */
 #include "globals.h"
 
@@ -85,9 +85,11 @@ anon_prime:
     case FLOAT_:
 	sprintf(buf, "%g", node.u.dbl);		/* exponent character is e */
 	if ((ptr = strchr(buf, '.')) == 0) {	/* locate decimal point */
-	    if ((ptr = strchr(buf, 'e')) == 0)  /* locate start of exponent */
-		strcat(buf, ".0");		/* add decimal point and 0 */
-	    else {
+	    if ((ptr = strchr(buf, 'e')) == 0) {/* locate start of exponent */
+		i = buf[strlen(buf) - 1];
+		if (isdigit(i))			/* check digit present */
+		    strcat(buf, ".0");		/* add decimal point and 0 */
+	    } else {
 		strcpy(tmp, ptr);		/* save exponent */
 		sprintf(ptr, ".0%s", tmp);	/* insert decimal point + 0 */
 	    }

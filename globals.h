@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.7
-    date    : 04/12/24
+    version : 1.8
+    date    : 05/02/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -180,6 +180,7 @@ KHASH_MAP_INIT_STR(Symtab, int)
 KHASH_MAP_INIT_INT64(Funtab, int)
 
 typedef struct Env {
+    jmp_buf finclude;		/* return point in finclude */
     double calls;		/* statistics */
     double opers;
     double dbl;			/* numerics */
@@ -216,6 +217,7 @@ typedef struct Env {
     unsigned char ignore;
     unsigned char overwrite;
     unsigned char printing;
+    unsigned char finclude_busy;
 } Env;
 
 /* arty.c */

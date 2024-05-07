@@ -1,7 +1,7 @@
 /*
     module  : fput.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 04/27/24
 */
 #ifndef FPUT_C
 #define FPUT_C
@@ -22,7 +22,6 @@ void fput_(pEnv env)
     if ((stdout_dup = dup(1)) != -1)
         dup2(fileno(node.u.fil), 1);
     writefactor(env, elem);
-    putchar(' ');
     fflush(stdout);
     if (stdout_dup != -1) {
         dup2(stdout_dup, 1);

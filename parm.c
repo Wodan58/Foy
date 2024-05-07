@@ -1,7 +1,7 @@
 /*
     module  : parm.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.3
+    date    : 04/29/24
 */
 #include "globals.h"
 
@@ -240,8 +240,8 @@ void parm(pEnv env, int num, Params type, char *file)
 	    execerror("two parameters", file);
 	first = vec_back(env->stack);
 	second = vec_at(env->stack, leng - 2);
-	if (first.op != INTEGER_)
-	    execerror("integer", file);
+	if (first.op != INTEGER_ && first.op != CHAR_ && first.op != BOOLEAN_)
+	    execerror("numeric", file);
 	if (second.op != FILE_ || !second.u.fil)
 	    execerror("file", file);
 	break;
@@ -291,6 +291,8 @@ void parm(pEnv env, int num, Params type, char *file)
 	    execerror("quotation as top parameter", file);
 	if (second.op != INTEGER_)
 	    execerror("integer as second parameter", file);
+	if (second.u.num < 0)
+	    execerror("non-negative integer", file);
 	break;
 /*
  * numeric type is needed:

@@ -7,7 +7,9 @@ status|[![GitHub CI build status](https://github.com/Wodan58/Foy/actions/workflo
 
 This repository implements [Joy](https://github.com/Wodan58/Joy) and uses the
 [BDW garbage collector](https://github.com/ivmai/bdwgc). It is a FORTH inspired
-Joy.
+Joy. Unlike [Moy](https://github.com/Wodan58/Moy) it uses only one type of
+vector and starts evaluating as soon as a symbol has been seen, not waiting for
+the final stop. It is an experiment.
 
 Build instructions
 ------------------

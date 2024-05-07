@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.5
-    date    : 04/11/24
+    version : 1.6
+    date    : 04/19/24
 */
 #include "globals.h"
 
@@ -14,6 +14,7 @@ static jmp_buf begin;		/* restart with empty program */
  */
 void abortexecution_(int num)
 {
+    fflush(stdin);
     longjmp(begin, num);
 }
 

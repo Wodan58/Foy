@@ -97,7 +97,6 @@
 #include "./src/genrecaux.c"
 #include "./src/geql.c"
 #include "./src/get.c"
-#include "./src/getch.c"
 #include "./src/getenv.c"
 #include "./src/gmtime.c"
 #include "./src/greater.c"

@@ -97,7 +97,6 @@ void genrec_(pEnv env);
 void genrecaux_(pEnv env);
 void geql_(pEnv env);
 void get_(pEnv env);
-void getch_(pEnv env);
 void getenv_(pEnv env);
 void gmtime_(pEnv env);
 void greater_(pEnv env);

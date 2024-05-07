@@ -214,7 +214,6 @@
 /* 3130 */ { Q0, IGNORE_OK, "quit", quit_, "N", "->", "[IMPURE] Exit from Joy.\n" },
 /* 3140 */ { Q0, OK, "casting", casting_, "DDA", "X Y  ->  Z", "[EXT] Z takes the value from X and uses the value from Y as its type.\n" },
 /* 3150 */ { Q0, OK, "filetime", filetime_, "DA", "F  ->  T", "[FOREIGN] T is the modification time of file F.\n" },
-/* 3160 */ { Q0, POSTPONE, "getch", getch_, "A", "->  N", "[IMPURE] Reads a character from input and puts it onto stack.\n" },
 /* 3170 */ { Q0, OK, "over", over_, "A", "X Y  ->  X Y X", "[EXT] Pushes an extra copy of the second item X on top of the stack.\n" },
 /* 3180 */ { Q0, OK, "pick", pick_, "DA", "X Y Z 2  ->  X Y Z X", "[EXT] Pushes an extra copy of nth (e.g. 2) item X on top of the stack.\n" },
 /* 3190 */ { Q0, IGNORE_POP, "assign", assign_, "DD", "V [N]  ->", "[IMPURE] Assigns value V to the variable with name N.\n" },
