@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.8
-    date    : 05/02/24
+    version : 1.11
+    date    : 05/28/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -13,20 +13,22 @@
 #include <setjmp.h>
 #include <math.h>
 #include <time.h>
-#include <gc.h>
-#include "kvec.h"
-#include "khash.h"
 
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <io.h>
+#include <windows.h>		/* pollute name space as much as possible */
+#include <io.h>			/* also import deprecated POSIX names */
 #pragma warning(disable: 4244 4267 4996)
+#define kh_packed		/* forget about __attribute__ ((packed)) */
 #else
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #endif
+
+#include <gc.h>			/* system installed BDW or local gc.h */
+#include "kvec.h"
+#include "khashl.h"
 
 /* configure			*/
 #define SHELLESCAPE	'$'
@@ -176,8 +178,10 @@ typedef struct Entry {
     } u;
 } Entry;
 
-KHASH_MAP_INIT_STR(Symtab, int)
-KHASH_MAP_INIT_INT64(Funtab, int)
+KHASHL_MAP_INIT(KH_LOCAL, symtab_t, symtab, const char *, int, kh_hash_str,
+		kh_eq_str)
+KHASHL_MAP_INIT(KH_LOCAL, funtab_t, funtab, uint64_t, int, kh_hash_uint64,
+		kh_eq_generic)
 
 typedef struct Env {
     jmp_buf finclude;		/* return point in finclude */
@@ -195,8 +199,8 @@ typedef struct Env {
     vector(Node) *tokens;	/* read ahead table */
     NodeList *code, *stack;	/* code and data area */
     vector(Entry) *symtab;	/* symbol table */
-    khash_t(Symtab) *hash;	/* hash tables */
-    khash_t(Funtab) *prim;
+    symtab_t *hash;		/* hash tables that index the symbol table */
+    funtab_t *prim;
     int hide_stack[DISPLAYMAX];
     struct {
 	char *name;
@@ -260,7 +264,7 @@ int getch(pEnv env);
 void ungetch(int ch);
 void error(char *str);
 void execerror(char *str, char *op);
-void include(pEnv env, char *name);
+int include(pEnv env, char *name);
 int getsym(pEnv env, int ch);
 /* symb.c */
 int lookup(pEnv env, char *name);

@@ -1,7 +1,7 @@
 #
-#   module  : %M%
-#   version : %I%
-#   date    : %G%
+#   module  : CMakeLists.txt
+#   version : 1.1
+#   date    : 05/28/24
 #
 cmake_minimum_required(VERSION 3.5)
 project(Joy VERSION 1.0)
@@ -13,8 +13,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 else()
   option(RUN_TESTS "Run standard tests" OFF)
 endif()
-add_executable(joy main.c scan.c symb.c read.c writ.c otab.c modl.c save.c
-	       arty.c prog.c parm.c undf.c)
+add_executable(joy main.c scan.c symb.c read.c writ.c otab.c module.c save.c
+	       arty.c prog.c parm.c undefs.c)
 add_definitions(-DLINK="\\"${CMAKE_EXE_LINKER_FLAGS}\\"")
 add_definitions(-DVERS="${CMAKE_BUILD_TYPE} ${CMAKE_PROJECT_VERSION}")
 #
