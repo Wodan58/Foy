@@ -1,7 +1,7 @@
 /*
     module  : parm.c
-    version : 1.3
-    date    : 04/29/24
+    version : 1.4
+    date    : 06/22/24
 */
 #include "globals.h"
 
@@ -759,8 +759,6 @@ void parm(pEnv env, int num, Params type, char *file)
  * check list at top with user defined symbol.
  */
     case ASSIGN:
-	if (leng < 2)
-	    execerror("two parameters", file);
 	first = vec_back(env->stack);
 	if (first.op != LIST_)
 	    execerror("list", file);

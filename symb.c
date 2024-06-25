@@ -1,7 +1,7 @@
 /*
     module  : symb.c
-    version : 1.3
-    date    : 05/27/24
+    version : 1.4
+    date    : 06/22/24
 */
 #include "globals.h"
 
@@ -15,9 +15,10 @@ static int enterglobal(pEnv env, char *name)
     int rv, index;
 
     index = vec_size(env->symtab);
-    ent.name = name;
+    ent.name = strdup(name);	/* move to permanent memory */
     ent.is_user = 1;
     ent.flags = env->inlining ? IMMEDIATE : OK;
+    ent.is_ok = 0;
     ent.u.body = 0;	/* may be assigned in definition */
     key = symtab_put(env->hash, ent.name, &rv);
     kh_val(env->hash, key) = index;
@@ -90,7 +91,7 @@ static int definition(pEnv env, int ch)
     }
     if (env->sym != USR_)
 	return ch;
-    name = env->str;
+    name = GC_strdup(env->str);
     vec_init(term);
     ch = getsym(env, ch);
     if (env->sym == EQDEF)

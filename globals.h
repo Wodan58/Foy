@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.11
-    date    : 05/28/24
+    version : 1.12
+    date    : 06/22/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +36,7 @@
 #define INPLINEMAX	255
 #define BUFFERMAX	80
 #define HELPLINEMAX	72
-#define MAXNUM		32
+#define MAXNUM		40
 #define FILENAMEMAX	14
 #define DISPLAYMAX	10	/* nesting in HIDE & MODULE */
 #define INIECHOFLAG	0
@@ -170,6 +170,12 @@ typedef struct Node {
     Operator op;
 } Node;
 
+typedef struct Token {
+    Operator op;
+    int x, y, pos;
+    Types u;
+} Token;
+
 typedef struct Entry {
     char *name, is_user, flags, is_ok;
     union {
@@ -196,7 +202,7 @@ typedef struct Env {
     char *mod_name;		/* name of module */
     vector(char) *string;	/* value */
     vector(char) *pushback;	/* push back buffer */
-    vector(Node) *tokens;	/* read ahead table */
+    vector(Token) *tokens;	/* read ahead table */
     NodeList *code, *stack;	/* code and data area */
     vector(Entry) *symtab;	/* symbol table */
     symtab_t *hash;		/* hash tables that index the symbol table */

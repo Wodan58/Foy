@@ -1,7 +1,7 @@
 /*
  *  module  : writ.c
- *  version : 1.2
- *  date    : 04/19/24
+ *  version : 1.3
+ *  date    : 06/22/24
  */
 #include "globals.h"
 
@@ -12,7 +12,7 @@ void writefactor(pEnv env, Node node)
 {
     int i;
     uint64_t j;
-    char *ptr, buf[MAXNUM], tmp[MAXNUM];
+    char *ptr, buf[BUFFERMAX], tmp[MAXNUM];
 
     switch (node.op) {
     case USR_PRIME_:
