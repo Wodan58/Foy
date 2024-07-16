@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.12
-    date    : 06/22/24
+    version : 1.13
+    date    : 07/01/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -198,6 +198,7 @@ typedef struct Env {
     char *str;			/* string */
     clock_t startclock;
     char **g_argv;		/* command line */
+    char *homedir;
     char *pathname;
     char *mod_name;		/* name of module */
     vector(char) *string;	/* value */

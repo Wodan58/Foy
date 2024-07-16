@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.6
-    date    : 04/19/24
+    version : 1.7
+    date    : 07/01/24
 */
 #include "globals.h"
 
@@ -69,8 +69,8 @@ static int my_main(int argc, char **argv)
     static unsigned char psdump = 0, pstats = 0;
     Env env;
     Node node;
+    char *ptr, *tmp;
     int i, j, ch, flag;
-    char *ptr, *tmp, *exe;
     /*
      * determine srcfile and filenam; they are stored in inilinebuffer.
      */
@@ -86,14 +86,17 @@ static int my_main(int argc, char **argv)
     /*
      * establish pathname, to be used when loading libraries, and basename.
      */
-    if ((ptr = strrchr(argv[0], '/')) != 0 ||
-	(ptr = strrchr(argv[0], '\\')) != 0) {
+    env.pathname = ".";
+    ptr = strrchr(argv[0], '/');
+#ifdef _MSC_VER
+    if (!ptr)
+	ptr = strrchr(argv[0], '\\');
+#endif
+    if (ptr) {
+	env.pathname = argv[0];		/* split argv[0] in pathname */
 	*ptr++ = 0;
-	env.pathname = argv[0];
-	argv[0] = ptr;
-    } else
-	env.pathname = ".";
-    exe = argv[0];
+	argv[0] = ptr;			/* and basename */
+    }
     /*
      * These flags are initialized here, allowing them to be overruled by the
      * command line. When set on the command line, they can not be overruled
@@ -197,7 +200,7 @@ static int my_main(int argc, char **argv)
      * handle options, might print symbol table.
      */
     if (helping || unknown) {
-	helping ? options() : opt_unknown(exe, unknown);
+	helping ? options() : opt_unknown(argv[0], unknown);
 	goto einde;
     }
     /*
@@ -217,7 +220,8 @@ static int my_main(int argc, char **argv)
     /*
      * (re)initialize code vector.
      */
-    vec_setsize(env.code, 0);		/* clear code, not stack */
+    vec_setsize(env.code, 0);		/* clear code */
+    vec_setsize(env.stack, 0);		/* also clear the stack */
     /*
      * start reading from input file(s).
      */
