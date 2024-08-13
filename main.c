@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.7
-    date    : 07/01/24
+    version : 1.8
+    date    : 08/12/24
 */
 #include "globals.h"
 
@@ -69,8 +69,8 @@ static int my_main(int argc, char **argv)
     static unsigned char psdump = 0, pstats = 0;
     Env env;
     Node node;
-    char *ptr, *tmp;
     int i, j, ch, flag;
+    char *ptr, *tmp, *exe;
     /*
      * determine srcfile and filenam; they are stored in inilinebuffer.
      */
@@ -87,7 +87,7 @@ static int my_main(int argc, char **argv)
      * establish pathname, to be used when loading libraries, and basename.
      */
     env.pathname = ".";
-    ptr = strrchr(argv[0], '/');
+    ptr = strrchr(exe = argv[0], '/');
 #ifdef _MSC_VER
     if (!ptr)
 	ptr = strrchr(argv[0], '\\');
@@ -95,7 +95,7 @@ static int my_main(int argc, char **argv)
     if (ptr) {
 	env.pathname = argv[0];		/* split argv[0] in pathname */
 	*ptr++ = 0;
-	argv[0] = ptr;			/* and basename */
+	argv[0] = exe = ptr;		/* and basename */
     }
     /*
      * These flags are initialized here, allowing them to be overruled by the
@@ -200,7 +200,7 @@ static int my_main(int argc, char **argv)
      * handle options, might print symbol table.
      */
     if (helping || unknown) {
-	helping ? options() : opt_unknown(argv[0], unknown);
+	helping ? options() : opt_unknown(exe, unknown);
 	goto einde;
     }
     /*

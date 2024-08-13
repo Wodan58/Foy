@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.13
-    date    : 07/01/24
+    version : 1.14
+    date    : 08/12/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -25,6 +25,8 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #endif
+
+#define USE_KHASHL
 
 #include <gc.h>			/* system installed BDW or local gc.h */
 #include "kvec.h"
