@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.8
-    date    : 08/12/24
+    version : 1.10
+    date    : 08/29/24
 */
 #include "globals.h"
 
@@ -71,11 +71,6 @@ static int my_main(int argc, char **argv)
     Node node;
     int i, j, ch, flag;
     char *ptr, *tmp, *exe;
-    /*
-     * determine srcfile and filenam; they are stored in inilinebuffer.
-     */
-    FILE *srcfile = stdin;
-    char *filenam = "stdin";
     unsigned char mustinclude = 1, helping = 0, unknown = 0;
 
     memset(&env, 0, sizeof(env));
@@ -84,19 +79,22 @@ static int my_main(int argc, char **argv)
      */
     env.startclock = clock();
     /*
-     * establish pathname, to be used when loading libraries, and basename.
+     * store the directory where the Joy binary is located in the list of
+     * pathnames to be used when including files. argv[0] is modified such
+     * that it contains only the basename.
      */
-    env.pathname = ".";
-    ptr = strrchr(exe = argv[0], '/');
-#ifdef _MSC_VER
+    vec_init(env.pathnames);
+    ptr = strrchr(argv[0], '/');
+#ifdef WINDOWS
     if (!ptr)
 	ptr = strrchr(argv[0], '\\');
 #endif
     if (ptr) {
-	env.pathname = argv[0];		/* split argv[0] in pathname */
-	*ptr++ = 0;
-	argv[0] = exe = ptr;		/* and basename */
+	vec_push(env.pathnames, argv[0]);
+	*ptr++ = 0;	/* split in directory */
+	argv[0] = ptr;	/* and basename */
     }
+    exe = argv[0];	/* Joy binary */
     /*
      * These flags are initialized here, allowing them to be overruled by the
      * command line. When set on the command line, they can not be overruled
@@ -160,24 +158,28 @@ static int my_main(int argc, char **argv)
     for (i = 1; i < argc; i++) {
 	ch = argv[i][0];
 	if (!isdigit(ch)) {
-	    if ((srcfile = fopen(filenam = argv[i], "r")) == 0) {
-		fprintf(stderr, "failed to open the file '%s'.\n", filenam);
+	    /*
+	     * The first file should also benefit from include logic.
+	     */
+	    if (include(&env, argv[i])) {
+		fprintf(stderr, "failed to open the file '%s'.\n", argv[i]);
 		return 0;
 	    }
 	    /*
 	     * Overwrite argv[0] with the filename and shift subsequent
 	     * parameters.
 	     */
-	    if ((ptr = strrchr(argv[0] = filenam, '/')) != 0) {
+	    if ((ptr = strrchr(argv[0] = argv[i], '/')) != 0) {
 		*ptr++ = 0;
-		argv[0] = filenam = ptr;	/* basename */
+		argv[0] = ptr;			/* basename */
 	    }
 	    for (--argc; i < argc; i++)
 		argv[i] = argv[i + 1];
-	    break;				/* only one filename */
+	    goto start;				/* only one filename */
 	} /* end if */
     } /* end for */
-    inilinebuffer(srcfile, filenam);
+    inilinebuffer(&env);
+start:    
     /*
      * determine argc and argv.
      */

@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.14
-    date    : 08/12/24
+    version : 1.17
+    date    : 09/01/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -200,9 +200,9 @@ typedef struct Env {
     char *str;			/* string */
     clock_t startclock;
     char **g_argv;		/* command line */
-    char *homedir;
-    char *pathname;
+    char *homedir;		/* HOME or HOMEPATH */
     char *mod_name;		/* name of module */
+    vector(char *) *pathnames;	/* pathnames to be searched when including */
     vector(char) *string;	/* value */
     vector(char) *pushback;	/* push back buffer */
     vector(Token) *tokens;	/* read ahead table */
@@ -250,7 +250,6 @@ void exitmod(void);
 char *classify(pEnv env, char *name);
 int qualify(pEnv env, char *name);
 /* otab.c */
-char *nickname(int ch);
 int operindex(pEnv env, proc_t proc);
 char *cmpname(pEnv env, proc_t proc);
 char *operarity(pEnv env, proc_t proc);
@@ -268,7 +267,7 @@ int readterm(pEnv env, NodeList *term, int ch);
 /* save.c */
 void save(pEnv env, NodeList *list, int num, int remove);
 /* scan.c */
-void inilinebuffer(FILE *fp, char *str);
+void inilinebuffer(pEnv env);
 int getch(pEnv env);
 void ungetch(int ch);
 void error(char *str);

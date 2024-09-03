@@ -1,10 +1,16 @@
 /*
     module  : otab.c
-    version : 1.2
-    date    : 05/27/24
+    version : 1.3
+    date    : 09/01/24
 */
 #include "globals.h"
 #include "prim.h"	/* declarations of functions */
+
+#ifdef _MSC_VER
+#define NOINLINE
+#else
+#define NOINLINE	__attribute__((__noinline__))
+#endif
 
 #ifdef NCHECK
 #define PARM(n, m)
@@ -81,7 +87,7 @@ static struct {
  *	      character that is not part of an identifier, then the nick name
  *	      is the part of the string after the first \0.
  */
-char *nickname(int ch)
+NOINLINE static char *nickname(int ch)
 {
     char *str;
 
@@ -108,7 +114,7 @@ int operindex(pEnv env, proc_t proc)
 /*
  * cmpname - return the name of an operator, used in Compare.
  */
-char *cmpname(pEnv env, proc_t proc)
+NOINLINE char *cmpname(pEnv env, proc_t proc)
 {
     return nickname(operindex(env, proc));
 }
@@ -116,7 +122,7 @@ char *cmpname(pEnv env, proc_t proc)
 /*
  * operarity - return the arity of an operator, used in arity.
  */
-char *operarity(pEnv env, proc_t proc)
+NOINLINE char *operarity(pEnv env, proc_t proc)
 {
     return optable[operindex(env, proc)].arity;
 }
