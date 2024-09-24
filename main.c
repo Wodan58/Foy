@@ -1,7 +1,7 @@
 /*
     module  : main.c
-    version : 1.10
-    date    : 08/29/24
+    version : 1.12
+    date    : 09/21/24
 */
 #include "globals.h"
 
@@ -19,16 +19,28 @@ void abortexecution_(int num)
 }
 
 /*
- * options - print help on startup options and exit: options are those that
- *	     cannot be set from within the language itself.
+ * banner - print the banner that was present in joy0; the banner is only
+ *	    printed with the -v option.
  */
-static void options()
+static void banner(void)
 {
     printf("JOY  -  compiled at %s on %s", __TIME__, __DATE__);
 #ifdef VERS
     printf(" (%s)", VERS);
 #endif
-    printf("\nCopyright 2001 by Manfred von Thun\n");
+    putchar('\n');
+    fflush(stdout);
+}
+
+/*
+ * options - print help on startup options and exit: options are those that
+ *	     cannot be set from within the language itself.
+ */
+static void options(int verbose)
+{
+    if (!verbose)
+	banner();
+    printf("Copyright 2001 by Manfred von Thun\n");
     printf("Usage: joy (options | filenames | parameters)*\n");
     printf("options, filenames, parameters can be given in any order\n");
     printf("options start with '-' and parameters start with a digit\n");
@@ -51,27 +63,28 @@ static void options()
     printf("  -s : dump symbol table after execution\n");
     printf("  -t : print a trace of program execution\n");
     printf("  -u : set the undeferror flag (0,1)\n");
+    printf("  -v : print a small banner at startup\n");
     printf("  -w : no warnings: overwriting, arities\n");
     printf("  -x : print statistics at end of program\n");
 }
 
 /*
- * opt_unknown - report unknown option and point out -h option.
+ * unknown_opt - report unknown option and point out -h option.
  */
-static void opt_unknown(char *exe, int ch)
+static void unknown_opt(char *exe, int ch)
 {
     printf("Unknown option argument: \"-%c\"\n", ch);
     printf("More info with: \"%s -h\"\n", exe);
 }
 
-static int my_main(int argc, char **argv)
+static void my_main(int argc, char **argv)
 {
     static unsigned char psdump = 0, pstats = 0;
     Env env;
     Node node;
     int i, j, ch, flag;
     char *ptr, *tmp, *exe;
-    unsigned char mustinclude = 1, helping = 0, unknown = 0;
+    unsigned char helping = 0, unknown = 0, mustinclude = 1, verbose = 0;
 
     memset(&env, 0, sizeof(env));
     /*
@@ -113,17 +126,17 @@ static int my_main(int argc, char **argv)
 	    for (j = 1; argv[i][j]; j++) {
 		switch (argv[i][j]) {
 		case 'a' : ptr = &argv[i][j + 1];
-			   env.autoput = strtoll(ptr, &tmp, 0);
+			   env.autoput = strtol(ptr, &tmp, 0);
 			   j += tmp - ptr;
 			   env.autoput_set = 1;		/* disable usrlib.joy */
 			   break;
 		case 'd' : env.debugging = 1; break;
 		case 'e' : ptr = &argv[i][j + 1];
-			   env.echoflag = strtoll(ptr, &tmp, 0);
+			   env.echoflag = strtol(ptr, &tmp, 0);
 			   j += tmp - ptr;
 			   break;
 		case 'g' : ptr = &argv[i][j + 1];
-			   env.tracegc = strtoll(ptr, &tmp, 0);
+			   env.tracegc = strtol(ptr, &tmp, 0);
 			   j += tmp - ptr;
 			   break;
 		case 'h' : helping = 1; break;
@@ -133,11 +146,12 @@ static int my_main(int argc, char **argv)
 		case 's' : psdump = 1; break;
 		case 't' : env.debugging = 2; break;
 		case 'u' : ptr = &argv[i][j + 1];
-			   env.undeferror = strtoll(ptr, &tmp, 0);
+			   env.undeferror = strtol(ptr, &tmp, 0);
 			   j += tmp - ptr;
 			   env.undeferror_set = 1;	/* disable usrlib.joy */
 			   break;
-		case 'w' : env.overwrite = 0; break;
+		case 'v' : verbose = 1; break;
+		case 'w' : env.overwrite = 1; break;
 		case 'x' : pstats = 1; break;
 		default  : unknown = argv[i][j]; break;
 		} /* end switch */
@@ -152,6 +166,11 @@ static int my_main(int argc, char **argv)
 	} /* end if */
     } /* end for */
     /*
+     * Handle the banner now, before a possible error message is generated.
+     */
+    if (verbose)
+	banner();
+    /*
      * Look for a possible filename parameter. Filenames cannot start with -
      * and cannot start with a digit, unless preceded by a path: e.g. './'.
      */
@@ -163,7 +182,7 @@ static int my_main(int argc, char **argv)
 	     */
 	    if (include(&env, argv[i])) {
 		fprintf(stderr, "failed to open the file '%s'.\n", argv[i]);
-		return 0;
+		return;
 	    }
 	    /*
 	     * Overwrite argv[0] with the filename and shift subsequent
@@ -202,7 +221,7 @@ start:
      * handle options, might print symbol table.
      */
     if (helping || unknown) {
-	helping ? options() : opt_unknown(exe, unknown);
+	helping ? options(verbose) : unknown_opt(exe, unknown);
 	goto einde;
     }
     /*
@@ -255,8 +274,10 @@ start:
 		    node = vec_pop(env.stack);
 		    writefactor(&env, node);
 		}
-		if (env.autoput)
+		if (env.autoput) {
 		    putchar('\n');
+		    fflush(stdout);
+		}
 	    }
 	}
     }
@@ -265,16 +286,16 @@ einde:
 	stats(&env);
     if (psdump)
 	dump(&env);
-    return 0;
 }
 
 int main(int argc, char **argv)
 {
-    int (*volatile m)(int, char **) = my_main;
+    void (*volatile m)(int, char **) = my_main;
 
     bottom_of_stack = (char *)&argc;
     GC_INIT();
-    return (*m)(argc, argv);
+    (*m)(argc, argv);
+    return 0;
 }
 
 /*

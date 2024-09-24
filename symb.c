@@ -1,7 +1,7 @@
 /*
     module  : symb.c
-    version : 1.4
-    date    : 06/22/24
+    version : 1.5
+    date    : 09/17/24
 */
 #include "globals.h"
 
@@ -15,11 +15,11 @@ static int enterglobal(pEnv env, char *name)
     int rv, index;
 
     index = vec_size(env->symtab);
-    ent.name = strdup(name);	/* move to permanent memory */
+    memset(&ent, 0, sizeof(ent));	/* make sure that all fields are 0 */
+    ent.name = strdup(name);		/* copy to permanent memory */
     ent.is_user = 1;
     ent.flags = env->inlining ? IMMEDIATE : OK;
-    ent.is_ok = 0;
-    ent.u.body = 0;	/* may be assigned in definition */
+    ent.u.body = 0;			/* may be assigned in definition */
     key = symtab_put(env->hash, ent.name, &rv);
     kh_val(env->hash, key) = index;
     vec_push(env->symtab, ent);
@@ -45,7 +45,7 @@ int lookup(pEnv env, char *name)
      * added during the first time read of private sections.
      */
     if ((index = qualify(env, name)) == 0)
-	/* not found, enter in global, unless it is a module-member  */
+	/* not found, enter in global, unless it is a module-member */
 	if (strchr(name, '.') == 0)
 	    index = enterglobal(env, name);
     return index;
@@ -80,8 +80,8 @@ static int definition(pEnv env, int ch)
     char *name;
     NodeList *term;
 
-    if (env->sym == LIBRA || env->sym == PRIVATE || env->sym == HIDE ||
-			     env->sym == MODULE_ || env->sym == CONST_) {
+    if (env->sym == LIBRA || env->sym == PRIVATE || env->sym == HIDE
+			  || env->sym == MODULE_ || env->sym == CONST_) {
 	ch = compound_def(env, ch);
 	if (env->sym == '.')
 	    ch = getsym(env, ch);
@@ -147,7 +147,7 @@ int compound_def(pEnv env, int ch)
     case HIDE:
 	initpriv(env);		/* initpriv increases the hide number */
 	ch = defsequence(env, ch);
-	stoppriv();		/* stoppriv changes from private to public */
+	stoppriv();		/* stoppriv changes private to public */
 	ch = compound_def(env, ch);
 	exitpriv();		/* exitpriv lowers the hide stack */
 	break;

@@ -1,7 +1,7 @@
 /*
     module  : times.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 09/19/24
 */
 #ifndef TIMES_C
 #define TIMES_C
@@ -12,12 +12,14 @@ N times executes P.
 */
 void times_(pEnv env)
 {
+    int i, n;
     Node list, node;
 
     PARM(2, TIMES);
     list = vec_pop(env->stack);
     node = vec_pop(env->stack);
-    while (node.u.num--)
+    n = node.u.num;
+    for (i = 0; i < n; i++)
 	pushcode(env, list.u.lis);
 }
 #endif

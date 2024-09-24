@@ -1,7 +1,7 @@
 /*
     module  : parm.c
-    version : 1.5
-    date    : 09/01/24
+    version : 1.7
+    date    : 09/19/24
 */
 #include "globals.h"
 
@@ -34,7 +34,8 @@ static void checknum(int num, int leng, char *file)
  */
 void parm(pEnv env, int num, Params type, char *file)
 {
-    int i, j, leng;
+    int i, j;
+    unsigned leng;
     Node first, second, third, fourth;
 
     leng = vec_size(env->stack);
@@ -253,8 +254,10 @@ void parm(pEnv env, int num, Params type, char *file)
 	    execerror("quotation as top parameter", file);
 	if (second.op != INTEGER_)
 	    execerror("integer as second parameter", file);
+#if 0
 	if (second.u.num < 0)
 	    execerror("non-negative integer", file);
+#endif
 	break;
 /*
  * numeric type is needed:
@@ -277,7 +280,8 @@ void parm(pEnv env, int num, Params type, char *file)
  */
     case PREDSUCC:
 	first = vec_back(env->stack);
-	if (first.op != INTEGER_ && first.op != CHAR_ && first.op != BOOLEAN_)
+	if (first.op != INTEGER_ && first.op != CHAR_ && first.op != BOOLEAN_ &&
+	    first.op != BIGNUM_)
 	    execerror("numeric", file);
 	break;
 /*
@@ -578,7 +582,7 @@ void parm(pEnv env, int num, Params type, char *file)
 		      break;
 	case SET_   : if (!first.u.set)
 			  execerror("non-empty set", file);
-		      for (j = second.u.num, i = 0; i < SETSIZE; i++)
+		      for (i = 0, j = second.u.num; i < SETSIZE; i++)
 			  if (first.u.set & ((int64_t)1 << i)) {
 			      if (!j)
 				  return;
@@ -609,7 +613,7 @@ void parm(pEnv env, int num, Params type, char *file)
 		      break;
 	case SET_   : if (!second.u.set)
 			  execerror("non-empty set", file);
-		      for (j = first.u.num, i = 0; i < SETSIZE; i++)
+		      for (i = 0, j = first.u.num; i < SETSIZE; i++)
 			  if (second.u.set & ((int64_t)1 << i)) {
 			      if (!j)
 				  return;
@@ -680,7 +684,7 @@ void parm(pEnv env, int num, Params type, char *file)
 	    execerror("list", file);
 	if (!vec_size(first.u.lis))
 	    execerror("non-empty list", file);
-	first = vec_at(first.u.lis, 0);
+	first = vec_back(first.u.lis);
 	if (first.op != USR_)
 	    execerror("user defined symbol", file);
 	break;

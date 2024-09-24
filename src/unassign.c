@@ -1,7 +1,7 @@
 /*
-    module  : %M%
-    version : %I%
-    date    : %G%
+    module  : unassign.c
+    version : 1.1
+    date    : 09/09/24
 */
 #ifndef UNASSIGN_C
 #define UNASSIGN_C

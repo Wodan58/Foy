@@ -1,7 +1,7 @@
 /*
     module  : arty.c
-    version : 1.2
-    date    : 09/01/24
+    version : 1.3
+    date    : 09/17/24
 */
 #include "globals.h"
 
@@ -63,16 +63,20 @@ int arity(pEnv env, NodeList *quot, int num)
 			return -1;
 		    if (prev.u.lis) {		/* skip empty */
 			prog = arity(env, prev.u.lis, 0);	/* recursion */
-//			if (prog < 0)
-//			    return -1;
+#if 0
+			if (prog < 0)
+			    return -1;
+#endif
 			num += prog;
 		    }
 		} else if (*str == 'Q') {	/* previous two */
 		    if (prev.op != LIST_)
 			return -1;
 		    prog = arity(env, prev.u.lis, 1);	/* recursion */
-//		    if (prog < 0)
-//			return -1;
+#if 0
+		    if (prog < 0)
+			return -1;
+#endif
 		    aggr = aggr_size(prevprev);	/* size of aggregate */
 		    num += aggr * prog;
 		} else if (*str == 'U')		/* unknown */

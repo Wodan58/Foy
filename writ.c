@@ -1,7 +1,7 @@
 /*
  *  module  : writ.c
- *  version : 1.3
- *  date    : 06/22/24
+ *  version : 1.4
+ *  date    : 09/17/24
  */
 #include "globals.h"
 
@@ -11,12 +11,12 @@
 void writefactor(pEnv env, Node node)
 {
     int i;
-    uint64_t j;
+    uint64_t set, j;
     char *ptr, buf[BUFFERMAX], tmp[MAXNUM];
 
     switch (node.op) {
     case USR_PRIME_:
-	printf("#");
+	putchar('#');
 	goto usr_prime;
 
     case USR_:
@@ -25,7 +25,7 @@ usr_prime:
 	break;
 
     case ANON_PRIME_:
-	printf("#");
+	putchar('#');
 	goto anon_prime;
 
     case ANON_FUNCT_:
@@ -52,11 +52,11 @@ anon_prime:
 
     case SET_:
 	putchar('{');
-	for (j = 1, i = 0; i < SETSIZE; i++, j <<= 1)
-	    if (node.u.set & j) {
+	for (i = 0, j = 1, set = node.u.set; i < SETSIZE; i++, j <<= 1)
+	    if (set & j) {
 		printf("%d", i);
-		node.u.set &= ~j;
-		if (node.u.set)
+		set &= ~j;
+		if (set)
 		    putchar(' ');
 	    }
 	putchar('}');
@@ -83,7 +83,7 @@ anon_prime:
 	break;
 
     case FLOAT_:
-	sprintf(buf, "%g", node.u.dbl);		/* exponent character is e */
+	snprintf(buf, BUFFERMAX, "%g", node.u.dbl);	/* exponent is e */
 	if ((ptr = strchr(buf, '.')) == 0) {	/* locate decimal point */
 	    if ((ptr = strchr(buf, 'e')) == 0) {/* locate start of exponent */
 		i = buf[strlen(buf) - 1];
@@ -91,7 +91,8 @@ anon_prime:
 		    strcat(buf, ".0");		/* add decimal point and 0 */
 	    } else {
 		strcpy(tmp, ptr);		/* save exponent */
-		sprintf(ptr, ".0%s", tmp);	/* insert decimal point + 0 */
+		strcat(buf, ".0");		/* add decimal point and 0 */
+		strcat(buf, tmp);		/* restore exponent */
 	    }
 	}
 	printf("%s", buf);

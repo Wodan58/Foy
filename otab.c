@@ -1,7 +1,7 @@
 /*
     module  : otab.c
-    version : 1.3
-    date    : 09/01/24
+    version : 1.5
+    date    : 09/20/24
 */
 #include "globals.h"
 #include "prim.h"	/* declarations of functions */
@@ -108,7 +108,7 @@ int operindex(pEnv env, proc_t proc)
 
     if ((key = funtab_get(env->prim, (uint64_t)proc)) != kh_end(env->prim))
 	return kh_val(env->prim, key);
-    return ANON_FUNCT_;	/* if not found, return the index of ANON_FUNCT_ */
+    return 0;	/* if not found, return 0 */
 }
 
 /*
@@ -139,10 +139,10 @@ void inisymboltable(pEnv env) /* initialise */
 
     env->hash = symtab_init();
     env->prim = funtab_init();
+    memset(&ent, 0, sizeof(ent));
     j = sizeof(optable) / sizeof(optable[0]);
     for (i = 0; i < j; i++) {
 	ent.name = optable[i].name;
-	ent.is_user = 0;
 	ent.flags = optable[i].flags;
 	ent.u.proc = optable[i].proc;
 	if (env->ignore)
@@ -160,7 +160,7 @@ void inisymboltable(pEnv env) /* initialise */
 	    }
 	key = symtab_put(env->hash, ent.name, &rv);
 	kh_val(env->hash, key) = i;
-	key = funtab_put(env->prim, (int64_t)ent.u.proc, &rv);
+	key = funtab_put(env->prim, (uint64_t)ent.u.proc, &rv);
 	kh_val(env->prim, key) = i;
 	vec_push(env->symtab, ent);
     }

@@ -1,7 +1,7 @@
 /*
-    module  : globals.h
-    version : 1.17
-    date    : 09/01/24
+    module  : %M%
+    version : %I%
+    date    : %G%
 */
 #include <stdio.h>
 #include <string.h>
@@ -28,7 +28,11 @@
 
 #define USE_KHASHL
 
-#include <gc.h>			/* system installed BDW or local gc.h */
+#ifdef _MSC_VER
+#include "../joy1/gc-8.2.8/include/gc.h"
+#else
+#include <gc.h>			/* system installed BDW */
+#endif
 #include "kvec.h"
 #include "khashl.h"
 
@@ -45,7 +49,7 @@
 #define INIAUTOPUT	1
 #define INITRACEGC	1
 #define INIUNDEFERROR	0
-#define INIWARNING	1
+#define INIWARNING	0
 
 /* installation dependent	*/
 #define SETSIZE (int)(CHAR_BIT * sizeof(uint64_t))	/* from limits.h */
