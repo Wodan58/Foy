@@ -1,7 +1,7 @@
 /*
-    module  : %M%
-    version : %I%
-    date    : %G%
+    module  : globals.h
+    version : 1.20
+    date    : 09/24/24
 */
 #include <stdio.h>
 #include <string.h>

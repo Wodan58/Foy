@@ -1,7 +1,7 @@
 #
 #   module  : CMakeLists.txt
-#   version : 1.5
-#   date    : 09/19/24
+#   version : 1.6
+#   date    : 09/24/24
 #
 cmake_minimum_required(VERSION 3.5)
 project(Joy VERSION 1.0)
@@ -31,7 +31,7 @@ else()
 		    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 		    COMMAND sh prim.sh .
 		    COMMAND sh tabl.sh .)
-  set(CF "-Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter")
+  set(CF "-Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -Wno-unused-result")
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${CF}")
     add_definitions(-DCOMP="\\"${CMAKE_C_FLAGS_RELEASE}\\"")
