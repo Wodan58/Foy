@@ -1,7 +1,7 @@
 /*
     module  : globals.h
-    version : 1.20
-    date    : 09/24/24
+    version : 1.21
+    date    : 10/11/24
 */
 #include <stdio.h>
 #include <string.h>
@@ -275,7 +275,6 @@ void inilinebuffer(pEnv env);
 int getch(pEnv env);
 void ungetch(int ch);
 void error(char *str);
-void execerror(char *str, char *op);
 int include(pEnv env, char *name);
 int getsym(pEnv env, int ch);
 /* symb.c */
@@ -288,3 +287,5 @@ void hide_inner_modules(pEnv env, int flag);
 void writefactor(pEnv env, Node node);
 void writeterm(pEnv env, NodeList *term);
 void writecode(pEnv env, NodeList *term);
+/* error.c */
+void execerror(pEnv env, char *str, char *op);

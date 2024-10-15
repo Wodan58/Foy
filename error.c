@@ -1,14 +1,14 @@
 /*
  *  module  : error.c
- *  version : 1.2
- *  date    : 09/18/24
+ *  version : 1.1
+ *  date    : 10/11/24
  */
 #include "globals.h"
 
 /*
  * print a runtime error to stderr and abort the execution of current program.
  */
-void execerror(char *message, char *op)
+void execerror(pEnv env, char *message, char *op)
 {
     int leng = 0;
     char *ptr, *str;

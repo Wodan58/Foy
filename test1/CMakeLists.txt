@@ -7,7 +7,7 @@ macro(exe9 src)
 add_custom_target(${src}.out ALL
 		  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test1
 		  DEPENDS joy ${CMAKE_SOURCE_DIR}/test1/${src}.joy
-		  COMMAND joy ${CMAKE_SOURCE_DIR}/test1/${src}.joy >${src}.out)
+		  COMMAND joy -vw ${CMAKE_SOURCE_DIR}/test1/${src}.joy >${src}.out)
 endmacro(exe9)
 
 # test most options

@@ -1,9 +1,9 @@
 Foy
 ===
 
-Build|Linux|Windows
----|---|---
-status|[![GitHub CI build status](https://github.com/Wodan58/Foy/actions/workflows/cmake.yml/badge.svg)](https://github.com/Wodan58/Foy/actions/workflows/cmake.yml)|[![AppVeyor CI build status](https://ci.appveyor.com/api/projects/status/github/Wodan58/Foy?branch=master&svg=true)](https://ci.appveyor.com/project/Wodan58/Foy)
+Build|Linux
+---|---
+status|[![GitHub CI build status](https://github.com/Wodan58/Foy/actions/workflows/cmake.yml/badge.svg)](https://github.com/Wodan58/Foy/actions/workflows/cmake.yml)
 
 This repository implements [Joy](https://github.com/Wodan58/Joy) and uses the
 [BDW garbage collector](https://github.com/ivmai/bdwgc). It is a FORTH inspired
@@ -18,17 +18,6 @@ Build instructions
     cd build
     cmake ..
     cmake --build .
-
-Build with MSVC
----------------
-
-Install bdwgc in a bdwgc-subdirectory.
-
-    mkdir build
-    cd build
-    cmake ..
-    cmake --build . --config Release
-    copy Release\joy.exe
 
 Running
 -------

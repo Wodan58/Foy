@@ -1,10 +1,10 @@
 /*
     module  : otab.c
-    version : 1.5
-    date    : 09/20/24
+    version : 1.7
+    date    : 10/15/24
 */
 #include "globals.h"
-#include "prim.h"	/* declarations of functions */
+#include "builtin.h"	/* declarations of functions */
 
 #ifdef _MSC_VER
 #define NOINLINE
@@ -80,7 +80,7 @@ static struct {
 #include "tabl.c"	/* the rest of optable */
 };
 
-#include "prim.c"	/* the primitive functions themselves */
+#include "builtin.c"	/* the primitive functions themselves */
 
 /*
  * nickname - return the name of an operator. If the operator starts with a
@@ -139,9 +139,9 @@ void inisymboltable(pEnv env) /* initialise */
 
     env->hash = symtab_init();
     env->prim = funtab_init();
-    memset(&ent, 0, sizeof(ent));
     j = sizeof(optable) / sizeof(optable[0]);
     for (i = 0; i < j; i++) {
+	memset(&ent, 0, sizeof(ent));
 	ent.name = optable[i].name;
 	ent.flags = optable[i].flags;
 	ent.u.proc = optable[i].proc;

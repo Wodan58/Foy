@@ -1,7 +1,7 @@
 /*
     module  : read.c
-    version : 1.2
-    date    : 03/21/24
+    version : 1.3
+    date    : 10/11/24
 */
 #include "globals.h"
 
@@ -34,7 +34,7 @@ static void exeterm(pEnv env)
 	case USR_:
 	    ent = vec_at(env->symtab, node.u.ent);
 	    if (!ent.u.body && env->undeferror)
-		execerror("definition", ent.name);
+		execerror(env, "definition", ent.name);
 	    pushcode(env, ent.u.body);
 	    break;
 
@@ -113,7 +113,7 @@ int readfactor(pEnv env, NodeList *term, int ch)
 	if (ent.is_user) {
 	    if (flags) {
 		if (!ent.u.body && env->undeferror)
-		    execerror("definition", ent.name);
+		    execerror(env, "definition", ent.name);
 		pushcode(env, ent.u.body);
 	    } else {
 		node.u.ent = index;

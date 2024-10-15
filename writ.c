@@ -1,7 +1,7 @@
 /*
  *  module  : writ.c
- *  version : 1.4
- *  date    : 09/17/24
+ *  version : 1.5
+ *  date    : 10/11/24
  */
 #include "globals.h"
 
@@ -91,7 +91,7 @@ anon_prime:
 		    strcat(buf, ".0");		/* add decimal point and 0 */
 	    } else {
 		strcpy(tmp, ptr);		/* save exponent */
-		strcat(buf, ".0");		/* add decimal point and 0 */
+		strcpy(ptr, ".0");		/* add decimal point and 0 */
 		strcat(buf, tmp);		/* restore exponent */
 	    }
 	}
