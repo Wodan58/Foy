@@ -1,14 +1,14 @@
 /*
     module  : argc.c
-    version : 1.1
-    date    : 03/21/24
+    version : 1.2
+    date    : 10/24/24
 */
 #ifndef ARGC_C
 #define ARGC_C
 
 /**
 Q0  OK  3050  argc  :  A  ->  I
-Pushes the number of command line arguments. This is quivalent to 'argv size'.
+Pushes the number of command line arguments. This is equivalent to 'argv size'.
 */
 void argc_(pEnv env)
 {
