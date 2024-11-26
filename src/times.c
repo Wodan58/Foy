@@ -1,7 +1,7 @@
 /*
     module  : times.c
-    version : 1.2
-    date    : 09/19/24
+    version : 1.3
+    date    : 11/12/24
 */
 #ifndef TIMES_C
 #define TIMES_C
@@ -12,7 +12,7 @@ N times executes P.
 */
 void times_(pEnv env)
 {
-    int i, n;
+    int64_t i, n;
     Node list, node;
 
     PARM(2, TIMES);
